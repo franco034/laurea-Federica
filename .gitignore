@@ -1,0 +1,24 @@
+# Dipendenze Node.js
+node_modules/
+package-lock.json
+
+# Variabili d'ambiente locali
+.env
+.env.local
+.env.*.local
+
+# File di sistema e log
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+Thumbs.db
+
+# Foto caricate in locale (non caricare foto personali su GitHub!)
+uploads/*
+!uploads/.gitkeep
+
+# Backup locali temporanei
+data/photos_backup.json
+data/*.bak

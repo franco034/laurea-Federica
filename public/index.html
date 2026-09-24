@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Festa di Laurea 🎓 | Condivisione Foto & Cloud</title>
+  <meta name="description" content="Carica e condividi le foto della Festa di Laurea in tempo reale. Tutte le foto vengono archiviate al sicuro nel Cloud Google Drive.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- Confetti and QR Code libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</head>
+<body>
+  <!-- Ambient background glow elements -->
+  <div class="ambient-glow glow-top"></div>
+  <div class="ambient-glow glow-bottom"></div>
+
+  <!-- Header & Navigation -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <span class="brand-cap">🎓</span>
+        <div class="brand-text">
+          <span class="brand-title" id="navTitle">Festa di Laurea</span>
+          <span class="brand-subtitle" id="navSubtitle">Condivisione Foto Live</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-glass btn-icon-text" id="btnOpenQr" title="Mostra QR Code per gli invitati">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+          <span class="desktop-only">QR Code Tavoli</span>
+        </button>
+        <button class="btn btn-glass btn-icon-text" id="btnOpenDrive" title="Apri cartella Google Drive">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path></svg>
+          <span class="desktop-only">Google Drive</span>
+        </button>
+        <button class="btn btn-glass btn-icon-only" id="btnOpenSettings" title="Impostazioni & Cloud">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="laurel-wreath">🌿 🎓 🌿</div>
+      <div class="badge-tag">CONGRATULAZIONI DOTTORESSA!</div>
+      <h1 class="hero-title" id="heroEventTitle">Festa di Laurea di Federico</h1>
+      <p class="hero-subtitle" id="heroDegreeCourse">Ingegneria Informatica</p>
+      <p class="hero-description" id="heroWelcomeMessage">
+        Benvenuti alla mia festa! 🥂 Scattate e caricate qui tutte le foto della serata per conservarle per sempre sul Cloud Google!
+      </p>
+
+      <!-- Live Statistics Pills -->
+      <div class="stats-container">
+        <div class="stat-pill">
+          <span class="stat-icon">📸</span>
+          <div class="stat-info">
+            <span class="stat-val" id="statPhotos">0</span>
+            <span class="stat-label">Foto caricate</span>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-icon">👥</span>
+          <div class="stat-info">
+            <span class="stat-val" id="statGuests">0</span>
+            <span class="stat-label">Invitati attivi</span>
+          </div>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-icon">❤️</span>
+          <div class="stat-info">
+            <span class="stat-val" id="statLikes">0</span>
+            <span class="stat-label">Like ricevuti</span>
+          </div>
+        </div>
+        <div class="stat-pill" id="driveStatusPill">
+          <span class="stat-icon">☁️</span>
+          <div class="stat-info">
+            <span class="stat-val" id="statDrive">Google Drive</span>
+            <span class="stat-label" id="statDriveStatus">Connesso</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upload Card Section -->
+    <section class="upload-section">
+      <div class="upload-card">
+        <div class="upload-header">
+          <div class="upload-title-row">
+            <h2 class="upload-title">Carica le tue foto</h2>
+            <span class="sparkle-badge">Nessun account richiesto ✨</span>
+          </div>
+          <p class="upload-desc">Scatta una foto adesso oppure scegli le migliori dalla tua galleria dello smartphone!</p>
+        </div>
+
+        <form id="uploadForm" class="upload-form">
+          <!-- Metadata Fields -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="guestNameInput">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Il tuo nome o soprannome
+              </label>
+              <input type="text" id="guestNameInput" name="guestName" placeholder="Es. Marco, Zia Elena, I colleghi..." maxlength="50" required>
+            </div>
+            <div class="form-group">
+              <label for="messageInput">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                Dedica o messaggio per il Dottore (opzionale)
+              </label>
+              <input type="text" id="messageInput" name="message" placeholder="Es. Congratulazioni Dottore! Fiero di te!" maxlength="250">
+            </div>
+          </div>
+
+          <!-- Hidden File Inputs -->
+          <input type="file" id="fileCameraInput" accept="image/*" capture="environment" multiple style="display: none;">
+          <input type="file" id="fileGalleryInput" accept="image/*" multiple style="display: none;">
+
+          <!-- Action Buttons / Dropzone -->
+          <div class="dropzone" id="dropzone">
+            <div class="dropzone-buttons">
+              <button type="button" class="btn btn-primary btn-action" id="btnTriggerCamera">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <span>Scatta Foto Subito</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-action" id="btnTriggerGallery">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                <span>Scegli dalla Galleria</span>
+              </button>
+            </div>
+            <p class="dropzone-hint">oppure trascina qui le foto da computer</p>
+          </div>
+
+          <!-- Selected Files Preview Container -->
+          <div class="preview-container" id="previewContainer" style="display: none;">
+            <div class="preview-header">
+              <span class="preview-count" id="previewCount">0 foto selezionate</span>
+              <button type="button" class="btn-clear-preview" id="btnClearPreview">Rimuovi tutte</button>
+            </div>
+            <div class="preview-grid" id="previewGrid"></div>
+            
+            <button type="submit" class="btn btn-glow btn-submit" id="btnSubmitUpload">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              <span>Carica e Salva su Google Drive 🚀</span>
+            </button>
+          </div>
+
+          <!-- Upload Progress Bar -->
+          <div class="upload-progress-wrapper" id="uploadProgressWrapper" style="display: none;">
+            <div class="progress-info">
+              <span id="progressStatusText">Caricamento e sincronizzazione cloud in corso...</span>
+              <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill" id="progressBarFill"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- Gallery & Controls Section -->
+    <section class="gallery-section">
+      <div class="gallery-topbar">
+        <div class="gallery-heading-group">
+          <h2 class="gallery-title">Momenti della Serata 📸</h2>
+          <p class="gallery-subtitle">Tutte le foto scattate dagli invitati in tempo reale</p>
+        </div>
+
+        <div class="gallery-actions-bar">
+          <!-- Filters -->
+          <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Tutte (<span id="countAll">0</span>)</button>
+            <button class="filter-tab" data-filter="dedications">Con Dedica 💌</button>
+            <button class="filter-tab" data-filter="popular">Più Votate ❤️</button>
+          </div>
+
+          <!-- Download Action -->
+          <a href="/api/download-all" class="btn btn-glass btn-download-zip" id="btnDownloadZip" title="Scarica tutte le foto scattate in un archivio ZIP">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            <span>Scarica Tutte (ZIP)</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Live Photo Grid -->
+      <div class="photo-grid" id="photoGrid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
+      <!-- Empty state placeholder -->
+      <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon">🥂 📸 🎓</div>
+        <h3>Ancora nessuna foto caricata!</h3>
+        <p>Sii il primo ad immortalare questo giorno indimenticabile!</p>
+        <button class="btn btn-primary" onclick="document.getElementById('guestNameInput').focus(); window.scrollTo({top: 200, behavior: 'smooth'});">
+          Scatta o Carica la Prima Foto
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-content">
+      <div class="footer-tag">🎓 Festeggia con noi la Laurea</div>
+      <p>Tutte le foto sono sincronizzate al sicuro nel tuo account Google Drive.</p>
+      <div class="footer-links">
+        <a href="#top" id="linkBackToTop">Torna in cima ↑</a>
+        <span class="sep">•</span>
+        <button class="btn-link" id="footerBtnQr">QR Code per Tavoli</button>
+        <span class="sep">•</span>
+        <a href="/api/download-all">Scarica Archivio ZIP</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal -->
+  <dialog class="lightbox-dialog" id="lightboxModal" closedby="any">
+    <div class="lightbox-wrapper">
+      <button class="lightbox-close" id="btnCloseLightbox" title="Chiudi (Esc)">✕</button>
+      <button class="lightbox-nav nav-prev" id="btnLightboxPrev" title="Precedente (←)">❮</button>
+      <button class="lightbox-nav nav-next" id="btnLightboxNext" title="Successiva (→)">❯</button>
+
+      <div class="lightbox-image-container">
+        <img src="" alt="Dettaglio foto" id="lightboxImg" class="lightbox-image">
+      </div>
+
+      <div class="lightbox-caption-card">
+        <div class="lightbox-meta">
+          <div class="lightbox-author-box">
+            <span class="lightbox-author-icon">📸</span>
+            <div class="lightbox-author-details">
+              <span class="lightbox-author-name" id="lightboxAuthor">Ospite</span>
+              <span class="lightbox-time" id="lightboxTime">Adesso</span>
+            </div>
+          </div>
+          <div class="lightbox-controls">
+            <button class="btn-like-lightbox" id="btnLightboxLike" title="Mi Piace">
+              ❤️ <span id="lightboxLikeCount">0</span>
+            </button>
+            <a href="#" download id="btnLightboxDownload" class="btn-download-single" title="Scarica questa foto">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+            </a>
+            <a href="#" target="_blank" id="btnLightboxDriveLink" class="btn-drive-single" title="Visualizza su Google Drive">
+              ☁️
+            </a>
+          </div>
+        </div>
+        <p class="lightbox-dedication" id="lightboxDedication" style="display: none;"></p>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- QR Code Modal -->
+  <dialog class="modal-dialog" id="qrModal" closedby="any">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">📱 Condividi con gli Invitati</h3>
+        <button class="btn-modal-close" id="btnCloseQr">✕</button>
+      </div>
+      <div class="modal-body qr-modal-body">
+        <p class="qr-description">
+          Gli invitati possono inquadrare questo QR Code con la fotocamera del loro smartphone per aprire il sito e iniziare subito a scattare e caricare foto!
+        </p>
+
+        <!-- Printable Table Card Preview -->
+        <div class="printable-card" id="printableTableCard">
+          <div class="print-border">
+            <div class="print-header">
+              <span class="print-emoji">🎓 🥂 📸</span>
+              <h4 id="qrPrintTitle">Festa di Laurea di Federico</h4>
+              <p class="print-subtitle">Condividi con noi i momenti più belli della serata!</p>
+            </div>
+            <div class="qr-canvas-wrapper">
+              <canvas id="qrCanvas"></canvas>
+            </div>
+            <div class="print-instructions">
+              <div class="print-step">1. Inquadra il QR Code con lo smartphone</div>
+              <div class="print-step">2. Scatta una foto o sceglila dalla galleria</div>
+              <div class="print-step">3. Lascia un augurio al festeggiato!</div>
+            </div>
+            <div class="print-url" id="qrTextUrl">http://...</div>
+          </div>
+        </div>
+
+        <div class="qr-actions">
+          <button class="btn btn-primary" id="btnPrintQr">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <span>Stampa Segnaposto per i Tavoli</span>
+          </button>
+          <button class="btn btn-secondary" id="btnCopyUrl">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span>Copia Link</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Settings & Google Drive Cloud Modal -->
+  <dialog class="modal-dialog" id="settingsModal" closedby="any">
+    <div class="modal-card modal-large">
+      <div class="modal-header">
+        <h3 class="modal-title">⚙️ Impostazioni & Cloud Google Drive</h3>
+        <button class="btn-modal-close" id="btnCloseSettings">✕</button>
+      </div>
+
+      <div class="modal-body settings-body">
+        <form id="settingsForm">
+          <!-- Step-by-step Drive Setup Banner -->
+          <div class="drive-setup-guide">
+            <div class="guide-header">
+              <span class="guide-icon">☁️</span>
+              <div>
+                <h4>Come salvare automaticamente su Google Drive (2 minuti)</h4>
+                <p>Le foto vengono salvate direttamente nella tua cartella personale di Google Drive senza passare per server di terze parti.</p>
+              </div>
+            </div>
+            
+            <ol class="guide-steps">
+              <li>Apri <strong><a href="https://script.google.com" target="_blank" rel="noopener">script.google.com</a></strong> e crea un "Nuovo progetto".</li>
+              <li>Copia il codice Google Apps Script già pronto cliccando sul pulsante qui sotto:
+                <br>
+                <button type="button" class="btn btn-sm btn-secondary" id="btnCopyScriptCode" style="margin-top: 6px;">
+                  📋 Copia Codice Script Google Drive
+                </button>
+              </li>
+              <li>Incollalo nel progetto Google Apps Script e clicca <strong>Distribuisci (Deploy) → Nuova distribuzione → Applicazione web</strong> (Esegui come: "Io", Chi ha accesso: "Chiunque").</li>
+              <li>Copia l'<strong>URL dell'applicazione web</strong> che ti viene mostrato e incollalo nel campo qui sotto!</li>
+            </ol>
+          </div>
+
+          <!-- Configuration Fields -->
+          <div class="settings-fields">
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <label for="cfgScriptUrl">URL Web App Google Apps Script</label>
+                <span id="scriptUrlStatus" style="font-size: 0.75rem; font-weight: 600;"></span>
+              </div>
+              <input type="url" id="cfgScriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
+              <small class="field-hint" id="cfgScriptUrlHint">⚠️ <strong>Attenzione</strong>: il link deve finire con <code>/exec</code> (ottenuto da "Distribuisci" ➔ "Nuova distribuzione"). Non incollare il link dell'editor che finisce con <code>/edit</code>!</small>
+              <div id="urlWarningBox" style="display: none; margin-top: 6px; padding: 8px 12px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 6px; font-size: 0.8rem; color: #fca5a5;">
+                ❌ <strong>Link non valido!</strong> Hai incollato il link di modifica dell'editor. Clicca in alto a destra su <strong>"Distribuisci" (Deploy) ➔ "Nuova distribuzione" ➔ Tipo: "Applicazione web"</strong> e copia l'URL che termina con <strong>/exec</strong>.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cfgFolderUrl">Link Diretto Cartella Google Drive (Opzionale)</label>
+              <input type="url" id="cfgFolderUrl" placeholder="https://drive.google.com/drive/folders/...">
+              <small class="field-hint">Serve per aprire la cartella con un click dal pulsante "Google Drive" del sito.</small>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cfgGraduateName">Nome Festeggiato / Dottore</label>
+                <input type="text" id="cfgGraduateName" placeholder="Federico" required>
+              </div>
+              <div class="form-group">
+                <label for="cfgDegreeCourse">Corso di Laurea / Titolo</label>
+                <input type="text" id="cfgDegreeCourse" placeholder="Ingegneria Informatica">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="cfgPartyDate">Data Festa</label>
+                <input type="date" id="cfgPartyDate">
+              </div>
+              <div class="form-group">
+                <label for="cfgAdminPin">PIN Amministratore (Predefinito: 1234)</label>
+                <input type="password" id="cfgAdminPin" placeholder="Inserisci PIN per confermare modifiche" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="cfgWelcomeMessage">Messaggio di Benvenuto per gli Ospiti</label>
+              <textarea id="cfgWelcomeMessage" rows="2" placeholder="Benvenuti alla mia festa di laurea!..."></textarea>
+            </div>
+          </div>
+
+          <!-- Cloud Sync Tools -->
+          <div class="sync-tools-card">
+            <h4>Sincronizzazione Cloud</h4>
+            <p>Se hai foto già caricate in locale e vuoi caricarle tutte sul tuo Google Drive:</p>
+            <button type="button" class="btn btn-secondary" id="btnSyncDriveManual">
+              🔄 Sincronizza Tutte le Foto su Google Drive
+            </button>
+          <!-- Photo Management Card -->
+          <div class="sync-tools-card" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05); margin-top: 14px;">
+            <h4 style="color: #f87171;">🗑️ Gestione Galleria</h4>
+            <p>Vuoi cancellare tutte le foto di prova dal sito prima dell'inizio della festa?</p>
+            <button type="button" class="btn btn-secondary" id="btnClearGallery" style="color: #f87171; border-color: rgba(239, 68, 68, 0.4);">
+              🗑️ Svuota Tutte le Foto dal Sito
+            </button>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" id="btnSaveSettings">
+              💾 Salva Impostazioni
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Mobile Floating Action Button -->
+  <button class="mobile-fab" id="mobileFab" title="Carica foto">
+    📸 <span>Carica Foto</span>
+  </button>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JavaScript file -->
+  <script src="app.js"></script>
+</body>
+</html>
