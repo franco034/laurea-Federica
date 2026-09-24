@@ -34,10 +34,10 @@ echo.
 echo (Se premi INVIO senza scrivere nulla, il programma si chiude)
 echo.
 
-set REPO_URL=
-set /p REPO_URL="Incolla URL GitHub: "
+set "REPO_URL="
+set /p "REPO_URL=Incolla URL GitHub: "
 
-if "%REPO_URL%"=="" goto :nourl
+if not defined REPO_URL goto :nourl
 
 echo.
 echo [3/3] Invio a GitHub in corso...
