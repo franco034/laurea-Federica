@@ -1,5 +1,4 @@
 @echo off
-setlocal EnableDelayedExpansion
 title Pubblicazione su GitHub - Festa di Federica
 cls
 echo ============================================================
@@ -28,22 +27,17 @@ echo ============================================================
 echo   COLLEGA IL TUO REPOSITORY GITHUB
 echo ============================================================
 echo.
-echo Se hai creato il repository su https://github.com/new:
-echo Incolla qui sotto l'URL (es: https://github.com/tuo-utente/sito-fede.git)
-echo e premi INVIO.
+echo 1. Vai su https://github.com/new e crea un nuovo repository.
+echo 2. Copia il link HTTPS (es: https://github.com/tuo-utente/sito-fede.git).
+echo 3. Incollalo qui sotto e premi INVIO.
 echo.
 echo (Se premi INVIO senza scrivere nulla, il programma si chiude)
 echo.
-set "REPO_URL="
-set /p "REPO_URL=Incolla URL GitHub: "
 
-if "%REPO_URL%"=="" (
-    echo.
-    echo Nessun URL inserito. Operazione locale completata con successo!
-    echo.
-    pause
-    exit /b 0
-)
+set REPO_URL=
+set /p REPO_URL="Incolla URL GitHub: "
+
+if "%REPO_URL%"=="" goto :nourl
 
 echo.
 echo [3/3] Invio a GitHub in corso...
@@ -54,7 +48,7 @@ git push -u origin main
 if %ERRORLEVEL% EQU 0 goto :success
 
 echo.
-echo [INFO] Tentativo allineamento forzato con GitHub...
+echo [INFO] Tentativo di allineamento con GitHub...
 git push -u origin main --force
 if %ERRORLEVEL% EQU 0 goto :success
 
@@ -63,9 +57,14 @@ echo ============================================================
 echo [ATTENZIONE] Il push non e' andato a buon fine.
 echo Possibili cause:
 echo 1. L'URL di GitHub inserito non e' corretto.
-echo 2. Non hai effettuato l'accesso a GitHub quando richiesto.
+echo 2. Non hai effettuato il login su GitHub nella finestra comparsa.
 echo 3. Non hai i permessi di scrittura sul repository.
 echo ============================================================
+goto :end
+
+:nourl
+echo.
+echo Nessun URL inserito. File preparati localmente con successo!
 goto :end
 
 :success
@@ -74,9 +73,9 @@ echo ============================================================
 echo   SUCCESSO! Il codice e' stato caricato su GitHub!
 echo ============================================================
 echo Ora puoi andare su https://render.com:
-echo 1. Clicca New + ^> Web Service
-echo 2. Collega il tuo repository GitHub
-echo 3. Clicca Create Web Service
+echo 1. Clicca su "New +" e poi "Web Service"
+echo 2. Connetti il tuo repository GitHub
+echo 3. Clicca su "Create Web Service"
 echo ============================================================
 
 :end
